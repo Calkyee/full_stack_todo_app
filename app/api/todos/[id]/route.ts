@@ -1,8 +1,26 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { UpdateTodoPayload } from "@/types";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { 
+  NextResponse 
+} from "next/server";
+
+import { 
+  prisma 
+} from "@/lib/prisma";
+
+import { 
+  DbService
+} from "@/server/services/db-service"; 
+
+import { 
+  UpdateTodoPayload 
+} from "@/types";
+
+import { 
+  headers 
+} from "next/headers";
+
+import { 
+  auth 
+} from "@/lib/auth";
 
 /**
  * =================================
@@ -20,8 +38,12 @@ export async function GET(
   if (!session) {
     return NextResponse.json({ error: "Unauthenticated." }, { status: 401 });
   }
+
+  const dbService = new DbService(); 
+  const client = await dbService.getDatabase(); 
+
   try {
-    const todo = await prisma.todo.findUnique({
+    const todo = await client.todo.findUnique({
       where: { id: params.id },
       include: {
         category: true,
@@ -59,9 +81,12 @@ export async function PUT(
     return NextResponse.json({ error: "Unauthenticated." }, { status: 401 });
   }
   try {
+    const dbService = new DbService(); 
+    const client = await dbService.getDatabase(); 
+
     const { id } = await params;
     const { completed } = await request.json();
-    const updatedTodo = await prisma.todo.update({
+    const updatedTodo = await client.todo.update({
       where: { id },
       data: {
         // categoryId,
@@ -95,13 +120,16 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth.api.getSession({ headers: await headers() });
+  const dbService = new DbService(); 
+  const client = await dbService.getDatabase();
 
   if (!session) {
     return NextResponse.json({ error: "Unauthenticated." }, { status: 401 });
   }
   try {
     const { id } = await params;
-    await prisma.todo.delete({
+    
+    await client.todo.delete({
       where: { id },
     });
 
