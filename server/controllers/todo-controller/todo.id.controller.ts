@@ -1,0 +1,34 @@
+import { 
+  AuthCheck
+} from "@/server/controllers/todo-controller/todo.controller"; 
+
+import { 
+  todoGetOne, 
+  todoPUT
+} from "@/server/modules/todo-module/todo.module"; 
+import { NextRequest, NextResponse } from "next/server";
+
+
+export async function PUT( 
+  request: NextRequest, 
+  { params }: { params: { id: string } },
+
+){ 
+  const response = await AuthCheck(); 
+  if(response) return response; 
+
+  return await todoPUT(request); 
+}
+
+
+export async function GET( 
+  request: NextRequest, 
+  { params }: { params: { id: string } },
+
+){ 
+  const response = await AuthCheck(); 
+  if(response) return response; 
+
+  return await todoGetOne(request); 
+}
+
