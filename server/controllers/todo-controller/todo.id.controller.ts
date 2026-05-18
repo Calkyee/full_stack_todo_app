@@ -1,13 +1,14 @@
 import { 
-  AuthCheck
-} from "@/server/controllers/todo-controller/todo.controller"; 
-
-import { 
   todoGetOne, 
   todoPUT
 } from "@/server/modules/todo-module/todo.module"; 
-import { NextRequest, NextResponse } from "next/server";
 
+import { NextRequest } from "next/server";
+
+
+import { 
+  AuthCheck
+} from "@/utils/auth-check/auth.check"; 
 
 export async function PUT( 
   request: NextRequest, 
