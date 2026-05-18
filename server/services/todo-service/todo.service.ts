@@ -23,19 +23,17 @@ export class TodoService {
   }
 
   async createTodo(data: Partial<Todo>): Promise<responseType<Todo>>{ 
-    
     if(!typia.is<Partial<Todo>>(data)) return { 
       data: [], 
       message: "invalid data", 
       status: 400 
     }
 
-    const validated = typia.assert<Partial<Todo>>(data); 
 
     const factory = await this.getFactory(); 
 
     // check if todo exists
-    const existingTodo = await factory.findTodo(validated); 
+    const existingTodo = await factory.findTodo(data); 
 
     if(existingTodo) { 
       return { 
@@ -45,7 +43,7 @@ export class TodoService {
       }
     }
 
-    const result = await factory.createTodo(validated); 
+    const result = await factory.createTodo(data); 
     
     return result; 
   }
@@ -73,11 +71,10 @@ export class TodoService {
       status: 400
     }
 
-    const validated = typia.assert<Partial<Todo>>(data); 
 
     const factory = await this.getFactory(); 
 
-    const existingTodo = await factory.findTodo(validated); 
+    const existingTodo = await factory.findTodo(data); 
 
     if(existingTodo.data.length === 0){ 
       return { 
@@ -103,11 +100,10 @@ export class TodoService {
       }
     }
 
-    const validated = typia.assert<Partial<Todo>>(data); 
 
     const factory = await this.getFactory(); 
 
-    const existingTodo = await factory.findTodo(validated); 
+    const existingTodo = await factory.findTodo(data); 
 
     if(existingTodo.data.length === 0 ){ 
       return { 
@@ -117,7 +113,7 @@ export class TodoService {
       }
     }
 
-    const result = await factory.deleteTodo(validated); 
+    const result = await factory.deleteTodo(data); 
 
     return result; 
   }
@@ -131,11 +127,9 @@ export class TodoService {
       }
     }
 
-    const validated = typia.assert<Partial<Todo>>(data); 
-
     const factory = await this.getFactory(); 
 
-    const existingTodo = await factory.findTodo(validated); 
+    const existingTodo = await factory.findTodo(data); 
 
     if(existingTodo.data.length === 0){ 
       return { 
@@ -145,7 +139,7 @@ export class TodoService {
       }
     }
 
-    const result = await factory.editTodo(validated); 
+    const result = await factory.editTodo(data); 
 
     return result; 
 
