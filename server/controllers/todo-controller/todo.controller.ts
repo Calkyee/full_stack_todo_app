@@ -11,40 +11,14 @@ import {
 } from "@/server/modules/todo-module/todo.module"; 
 
 import { 
-  auth 
-} from "@/lib/auth";
-
-import { 
-  Todo
-} from "@/auto-generated/zod"; 
-
-import { 
-  headers 
-} from "next/headers";
-
-import { responseType } from "@/types/response-types";
+  AuthCheck
+} from "@/utils/auth-check/auth.check"; 
 
 /**
  * ============
  *  Authcheck may seem problematic, but the undefined part is fine because we don't need to complicate it further. For now it works and when it breaks we fix, but we don't fix what isn't breaking. 
  * =============
  */
-
-export async function AuthCheck(){ 
-  const session = await auth.api.getSession({headers: await headers()}); 
-  if(!session){ 
-    return NextResponse.json<responseType<Todo>>( 
-      { 
-        data: [], 
-        message: "Unauthenciated", 
-        status: 401
-      }, 
-      { 
-        status: 401
-      }
-    )
-  }
-}
 
 export async function GET(
   request: NextRequest,
