@@ -72,12 +72,29 @@ export async function todoPUT(
 
   const json = await request.json(); 
 
-  const response = await service.updateTodo(json); 
+  const response = await service.updateOneTodo(json); 
 
   return NextResponse.json( 
     response, 
      { 
       status: response.status
      }
+  )
+}
+
+export async function todoGetOne( 
+  request: NextRequest
+){ 
+  const service = new TodoService(); 
+  
+  const json = await request.json(); 
+
+  const response = await service.findOneTodo(json); 
+
+  return NextResponse.json( 
+    response, 
+    { 
+      status: response.status
+    }
   )
 }
