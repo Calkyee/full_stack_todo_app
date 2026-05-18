@@ -9,6 +9,12 @@
  */
 
 /**
+ * We're gonna be replacing alot of this with auto-generated zod schema's because type errors can occur here. 
+ * 
+ */
+
+
+/**
  * =================================
  * ENUMS
  * =================================
