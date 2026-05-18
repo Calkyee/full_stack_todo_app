@@ -58,13 +58,39 @@ export class TodoService {
     if(existingTodo.data.length === 0){ 
       return { 
         data: [], 
-        message: "No todo's found", 
+        message: "No todo found", 
         status: 404
       }
     }
 
     return existingTodo; 
   }
+
+  async findOneTodo(data: Partial<Todo>): Promise<responseType<Todo>> {
+    if(!typia.is<Partial<Todo>>(data)) return { 
+      data: [], 
+      message: "invalid data", 
+      status: 400
+    }
+
+    const validated = typia.assert<Partial<Todo>>(data); 
+
+    const factory = await this.getFactory(); 
+
+    const existingTodo = await factory.findTodo(validated); 
+
+    if(existingTodo.data.length === 0){ 
+      return { 
+        data: [], 
+        message: "No todo found", 
+        status: 404 
+      }
+    }
+
+    return existingTodo; 
+  }
+
+  
 
 
   async deleteTodo(data: Partial<Todo>): Promise<responseType<Todo>> {
@@ -96,7 +122,7 @@ export class TodoService {
     return result; 
   }
 
-  async updateTodo(data: Partial<Todo>): Promise<responseType<Todo>> { 
+  async updateOneTodo(data: Partial<Todo>): Promise<responseType<Todo>> { 
     if(!typia.is<Partial<Todo>>(data)) { 
       return {
         data: [], 
