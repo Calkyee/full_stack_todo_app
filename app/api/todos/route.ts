@@ -20,9 +20,9 @@ import {
 
 /**
  * =================================
- * GET /api/todos
- *
- * Fetches all todos from the database.
+ * initializes database in each request because docker will run into missing environment variables if single ton is used on module level 
+ * Adjusting later on is recommended 
+ * 
  * =================================
  */
 export async function GET() {
