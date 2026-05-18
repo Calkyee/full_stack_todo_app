@@ -1,8 +1,22 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { CreateTodoPayload } from "@/types";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { 
+  NextResponse 
+} from "next/server";
+
+import { 
+  DbService
+} from "@/server/services/db-service"; 
+
+import { 
+  CreateTodoPayload 
+} from "@/types";
+
+import { 
+  auth 
+} from "@/lib/auth";
+
+import { 
+  headers 
+} from "next/headers";
 
 /**
  * =================================
@@ -18,14 +32,17 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthenticated." }, { status: 401 });
   }
   try {
-    const todos = await prisma.todo.findMany({
+    const dbService = new DbService(); 
+    const client = await dbService.getDatabase(); 
+
+    const todos = await client.todo.findMany({
       orderBy: { createdAt: "desc" },
       include: {
         category: true, // Include category details if they exist
       },
     });
 
-    const newTodos = await prisma.todo.findMany({
+    const newTodos = await client.todo.findMany({
       where: { userId: session.user.id },
     });
     return NextResponse.json(newTodos);
@@ -52,6 +69,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthenticated." }, { status: 401 });
   }
   try {
+    const dbService = new DbService(); 
+    const client = await dbService.getDatabase(); 
+
     // Note: In a real app, you'd get the userId from the session.
     // For now, we'll assume it's passed in the body for simplicity.
     const {
@@ -70,7 +90,7 @@ export async function POST(request: Request) {
     }
 
     // check if todo already exists
-    const todo = await prisma.todo.findFirst({
+    const todo = await client.todo.findFirst({
       where: {
         content,
         userId,
@@ -84,7 +104,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const newTodo = await prisma.todo.create({
+    const newTodo = await client.todo.create({
       data: {
         content,
         userId,
@@ -122,8 +142,11 @@ export async function DELETE(request: Request) {
   try {
     const userId = session.user.id;
 
+    const dbService = new DbService(); 
+    const client = await dbService.getDatabase(); 
+
     // check if todo already exists
-    const todos = await prisma.todo.deleteMany({
+    const todos = await client.todo.deleteMany({
       where: {
         userId,
         completed: true,
