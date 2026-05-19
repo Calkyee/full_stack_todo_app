@@ -11,6 +11,7 @@ import { responseType } from "@/types/response-types";
 /**
  * ============
  * each method requires implementation but for now it's fine 
+ * this pattern avoids vendor lock in even if we decide to skip Prisma 
  * ============
  */
 
